@@ -8,7 +8,6 @@ type Task struct {
 	Duration  time.Duration 
 	TargetX int
 	TargetY int
-	TargetID int
 }
 
 

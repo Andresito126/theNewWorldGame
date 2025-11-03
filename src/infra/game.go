@@ -94,7 +94,7 @@ func (g *Game) Update() error {
 			if res.WasClicked(mx, my) {
 				
                 // si si se crea la tarea usando la fabrica, res id 
-				task, err := domain.NewTaskFromResource(res.ResourceType, res.ID, int(res.X), int(res.Y))
+				task, err := domain.NewTaskFromResource(res.ResourceType, int(res.X), int(res.Y))
 				if err != nil { 
                     log.Printf("Error al crear tarea: %v", err)
                     continue 
@@ -103,7 +103,7 @@ func (g *Game) Update() error {
 				// se busca uno libre para la tarea
 				for _, s := range g.Survivors {
 					if s.State == "IDLE" {
-                        log.Printf("Asignando tarea %s id %d a superv %d", task.Type, task.TargetID, s.ID)
+						log.Printf("Asignando tarea %s a Survivor %d", task.Type, s.ID)
 						s.State = "MOVING_TO_RESOURCE"
 						// el objetivo es el recurso
 						s.TargetX = res.X 
@@ -145,35 +145,13 @@ func (g *Game) Update() error {
 		
         // busca al sobreviviente que termino
 		for _, s := range g.Survivors {
-			if s.State == "GATHERING" && s.ActiveTask.TargetID == result.TaskTargetID { 
+			if s.State == "GATHERING" { 
 				log.Printf("%d moviendo a la base", s.ID)
 				s.State = "MOVING_TO_BASE"
 				break
 			}
 		}
-
-        // nodos y funcionam
-		// Lista temporal para los nodos vivos
-        newResourceList := make([]*ResourceNode, 0)
-
-        for _, res := range g.Resources {
-            if res.ID == result.TaskTargetID {
-                res.Health -= 10 
-                log.Printf("Recurso %d dañado, vida restante: %d", res.ID, res.Health)
-                if res.Health > 0 {
-                    newResourceList = append(newResourceList, res)
-                } else {
-                    log.Printf("Recurso %d agotado", res.ID)
-                }
-            } else {
-                // no es el nodo afectado, entonces se queda
-                newResourceList = append(newResourceList, res)
-            }
-        }
-        // reemplaza lista
-        g.Resources = newResourceList
-
-	default: 
+		default: 
 	}
 
 	return nil

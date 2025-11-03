@@ -48,9 +48,8 @@ func SurvivorMainLoop(
 
 			// resultado
 			botin := domain.Result{
-				Resource:     task.Resource,
-				Amount:       10, 
-				TaskTargetID: task.TargetID, 
+				Resource: task.Resource,
+				Amount: 10, 
 			}
 
 			// con esto se regresa el resultado de regreso
