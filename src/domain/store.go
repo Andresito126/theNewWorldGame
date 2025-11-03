@@ -9,14 +9,14 @@ type Store struct {
 	resources map[string]int
 }
 
-// NewStore es el constructor que prepara el store
+// es el constructor que prepara el store
 func NewStore() *Store {
 	return &Store{
 		resources: make(map[string]int),
 	}
 }
 
-// AddResource es la forma segura de añadir recursos
+// la forma segura de añadir recursos
 func (s *Store) AddResource(resource string, amount int) {
 	s.mutex.Lock()
 	defer s.mutex.Unlock()
@@ -24,8 +24,8 @@ func (s *Store) AddResource(resource string, amount int) {
 	s.resources[resource] += amount
 }
 
-// GetResources es la forma seguro de leer los recursos
-// Devuelve una copia para que la ui la lea sin rollos
+// es la forma seguro de leer los recursos
+// devuelve una copia para que la ui la lea sin rollos
 func (s *Store) GetResources() map[string]int {
 	s.mutex.Lock()
 	defer s.mutex.Unlock()

@@ -4,9 +4,6 @@ import (
 	"fmt"
 	"time"
 )
-
-
-
 // recursos 
 const (
 	ResourceMutantTree = "MutantTree"
@@ -15,7 +12,7 @@ const (
 )
 
 // para pasarselas a la tarea.
-func NewTaskFromResource(resourceType string, x, y int) (Task, error) {
+func NewTaskFromResource(resourceType string, targetID int, x, y int) (Task, error) {
 
 	switch resourceType {
 	case ResourceMutantTree:
@@ -25,6 +22,7 @@ func NewTaskFromResource(resourceType string, x, y int) (Task, error) {
 			Duration: 3 * time.Second,
 			TargetX:  x,
 			TargetY:  y,
+			TargetID: targetID,
 		}, nil
 
 	case ResourceScrapPile:
@@ -34,6 +32,7 @@ func NewTaskFromResource(resourceType string, x, y int) (Task, error) {
 			Duration: 5 * time.Second,
 			TargetX:  x,
 			TargetY:  y,
+			TargetID: targetID,
 		}, nil
 
 	case ResourceWaterPuddle:
@@ -43,6 +42,7 @@ func NewTaskFromResource(resourceType string, x, y int) (Task, error) {
 			Duration: 2 * time.Second,
 			TargetX:  x,
 			TargetY:  y,
+			TargetID: targetID,
 		}, nil
 
 	default:
