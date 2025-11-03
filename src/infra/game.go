@@ -5,7 +5,8 @@ import (
 	"image/color"
 	"log"
 	"math/rand"
-
+	"sort"
+	
 	"github.com/Andresito126/theNewWorldGame/src/application"
 	"github.com/Andresito126/theNewWorldGame/src/domain"
 
@@ -26,6 +27,8 @@ type Game struct {
 	Resources []*ResourceNode
 
 	background *ebiten.Image
+
+	craftingSystem *CraftingSystem
 }
 
 // el constructor de la ui
@@ -74,6 +77,9 @@ func NewGame(svc *application.GameService) *Game {
 		resources = append(resources, NewResourceNode(nodeCounter, x, y, scrapImg, domain.ResourceScrapPile))
 		nodeCounter++ 
 	}
+
+	// sistema de crafteo
+	craftSystem := NewCraftingSystem() 
 	
 	return &Game{
 		service:   svc,
@@ -83,6 +89,7 @@ func NewGame(svc *application.GameService) *Game {
         scrapSprite:    scrapImg,
         Resources:      resources,
 		background:     bgImg, 
+		craftingSystem: craftSystem,
 	}
 }
 func (g *Game) Update() error {
@@ -116,6 +123,27 @@ func (g *Game) Update() error {
 				break 
 			}
 		}
+	}
+
+	//crafteos
+
+	if inpututil.IsKeyJustPressed(ebiten.KeyB) {
+		// llama al sistema de crafteo
+		g.craftingSystem.AttemptCraftRefuge(
+			g.service,
+			g.Survivors,
+			BaseX,
+			BaseY,
+		)
+	}
+
+	if inpututil.IsKeyJustPressed(ebiten.KeyV) { 
+		g.craftingSystem.AttemptCraftBarrier(
+			g.service,
+			g.Survivors,
+			BaseX,
+			BaseY,
+		)
 	}
 
 
@@ -182,13 +210,22 @@ func (g *Game) Draw(screen *ebiten.Image) {
 
 	// invetario 
 	resources := g.service.Store.GetResources()
-	debugMsg := "THE NEW WORLD\n"
-	debugMsg += " ALMACÉN (Store) \n"
-	for resourceName, amount := range resources {
-		debugMsg += fmt.Sprintf("%s: %d\n", resourceName, amount)
+	keys := make([]string, 0, len(resources))
+	for k := range resources {
+		keys = append(keys, k)
 	}
+	sort.Strings(keys)
 
-	ebitenutil.DebugPrint(screen, debugMsg) 
+	uiText := "The New World\n"
+	uiText += "Clic: Recolectar | 'B': Mejorar refugio\n\n | 'V': Mejorar barrera\n\n" 
+	uiText += "--- ALMACÉN (Store) ---\n"
+
+	for _, key := range keys {
+        // usa la key para buscar el valor en el mapa
+		uiText += fmt.Sprintf("%s: %d\n", key, resources[key])
+	}
+	//lo que se dibuja
+	ebitenutil.DebugPrint(screen, uiText)
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (int, int) {
