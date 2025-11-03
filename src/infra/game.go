@@ -85,10 +85,13 @@ func NewGame(svc *application.GameService) *Game {
 		service:   svc,
 		Survivors: survivors,
 		survivorSprite: img,
+		
 		treeSprite:     treeImg,
         scrapSprite:    scrapImg,
         Resources:      resources,
+		
 		background:     bgImg, 
+		
 		craftingSystem: craftSystem,
 	}
 }
@@ -217,7 +220,7 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	sort.Strings(keys)
 
 	uiText := "The New World\n"
-	uiText += "Clic: Recolectar | 'B': Mejorar refugio\n\n | 'V': Mejorar barrera\n\n" 
+	uiText += "Clic: Recolectar | 'B': Mejorar refugio | 'V': Mejorar barrera\n\n" 
 	uiText += "--- ALMACÉN (Store) ---\n"
 
 	for _, key := range keys {
